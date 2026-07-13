@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Xcode / Swift
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Rust / Windows
+windows/target/
+windows/.toolchain/
+
+# Build outputs
+dist/
+
+# Editors
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log

@@ -1,0 +1,274 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000010000000000000001 /* DNSConnectorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000001 /* DNSConnectorApp.swift */; };
+		A10000020000000000000002 /* DNSConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000020000000000000002 /* DNSConfiguration.swift */; };
+		A10000030000000000000003 /* DNSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000030000000000000003 /* DNSManager.swift */; };
+		A10000040000000000000004 /* DNSViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000040000000000000004 /* DNSViewModel.swift */; };
+		A10000050000000000000005 /* DNSMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000050000000000000005 /* DNSMenuView.swift */; };
+		A10000060000000000000006 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000060000000000000006 /* Assets.xcassets */; };
+		A10000070000000000000007 /* DDNSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000A000000000000000A /* DDNSClient.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A20000010000000000000001 /* DNSConnectorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSConnectorApp.swift; sourceTree = "<group>"; };
+		A20000020000000000000002 /* DNSConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSConfiguration.swift; sourceTree = "<group>"; };
+		A20000030000000000000003 /* DNSManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSManager.swift; sourceTree = "<group>"; };
+		A20000040000000000000004 /* DNSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSViewModel.swift; sourceTree = "<group>"; };
+		A20000050000000000000005 /* DNSMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSMenuView.swift; sourceTree = "<group>"; };
+		A20000060000000000000006 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A20000070000000000000007 /* NKriZ DNS Connector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NKriZ DNS Connector.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000080000000000000008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A20000090000000000000009 /* NKriZDNSConnector.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NKriZDNSConnector.entitlements; sourceTree = "<group>"; };
+		A200000A000000000000000A /* DDNSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DDNSClient.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A30000010000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A40000010000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A40000020000000000000002 /* NKriZDNSConnector */,
+				A40000030000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A40000020000000000000002 /* NKriZDNSConnector */ = {
+			isa = PBXGroup;
+			children = (
+				A20000010000000000000001 /* DNSConnectorApp.swift */,
+				A20000020000000000000002 /* DNSConfiguration.swift */,
+				A20000030000000000000003 /* DNSManager.swift */,
+				A20000040000000000000004 /* DNSViewModel.swift */,
+				A20000050000000000000005 /* DNSMenuView.swift */,
+				A200000A000000000000000A /* DDNSClient.swift */,
+				A20000060000000000000006 /* Assets.xcassets */,
+				A20000080000000000000008 /* Info.plist */,
+				A20000090000000000000009 /* NKriZDNSConnector.entitlements */,
+			);
+			path = NKriZDNSConnector;
+			sourceTree = "<group>";
+		};
+		A40000030000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A20000070000000000000007 /* NKriZ DNS Connector.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A50000010000000000000001 /* NKriZ DNS Connector */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A70000030000000000000003 /* Build configuration list for PBXNativeTarget "NKriZ DNS Connector" */;
+			buildPhases = (
+				A50000020000000000000002 /* Sources */,
+				A30000010000000000000001 /* Frameworks */,
+				A50000030000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NKriZ DNS Connector";
+			productName = "NKriZ DNS Connector";
+			productReference = A20000070000000000000007 /* NKriZ DNS Connector.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A60000010000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					A50000010000000000000001 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = A70000010000000000000001 /* Build configuration list for PBXProject "NKriZDNSConnector" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A40000010000000000000001;
+			productRefGroup = A40000030000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A50000010000000000000001 /* NKriZ DNS Connector */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A50000030000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000060000000000000006 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A50000020000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000010000000000000001 /* DNSConnectorApp.swift in Sources */,
+				A10000020000000000000002 /* DNSConfiguration.swift in Sources */,
+				A10000030000000000000003 /* DNSManager.swift in Sources */,
+				A10000040000000000000004 /* DNSViewModel.swift in Sources */,
+				A10000050000000000000005 /* DNSMenuView.swift in Sources */,
+				A10000070000000000000007 /* DDNSClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A80000010000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A80000020000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		A80000030000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NKriZDNSConnector/NKriZDNSConnector.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = NKriZDNSConnector/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nkriz.dnsconnector;
+				PRODUCT_NAME = "NKriZ DNS Connector";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A80000040000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NKriZDNSConnector/NKriZDNSConnector.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = NKriZDNSConnector/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nkriz.dnsconnector;
+				PRODUCT_NAME = "NKriZ DNS Connector";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A70000010000000000000001 /* Build configuration list for PBXProject "NKriZDNSConnector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A80000010000000000000001 /* Debug */,
+				A80000020000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A70000030000000000000003 /* Build configuration list for PBXNativeTarget "NKriZ DNS Connector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A80000030000000000000003 /* Debug */,
+				A80000040000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A60000010000000000000001 /* Project object */;
+}

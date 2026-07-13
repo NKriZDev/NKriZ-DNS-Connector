@@ -1,0 +1,10 @@
+[source.crates-io]
+replace-with = "rsproxy-sparse"
+
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+
+[target.x86_64-pc-windows-gnu]
+linker = ".toolchain/llvm-mingw/bin/x86_64-w64-mingw32-gcc"
+ar = ".toolchain/llvm-mingw/bin/x86_64-w64-mingw32-ar"
+rustflags = ["-C", "link-arg=-static", "-C", "link-arg=-static-libgcc"]
