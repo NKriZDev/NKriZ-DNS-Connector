@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=NKriZ DNS Connector
+GenericName=DNS Switcher
+Comment=Tray app to switch DNS between automatic and NKriZ servers
+Exec=nkriz-dns-connector
+Icon=network-workgroup
+Terminal=false
+Categories=Network;Utility;
+Keywords=DNS;NKriZ;NetworkManager;
+StartupNotify=false
+StartupWMClass=nkriz-dns-connector
+OnlyShowIn=XFCE;MATE;Cinnamon;GNOME;Unity;
+X-GNOME-Autostart-enabled=true
+Hidden=false
+NoDisplay=false

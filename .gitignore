@@ -16,9 +16,12 @@ xcuserdata/
 *.dSYM.zip
 *.dSYM
 
-# Rust / Windows
+# Rust
 windows/target/
 windows/.toolchain/
+linux/.toolchain/
+linux/target/
+
 
 # Build outputs
 dist/
