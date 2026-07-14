@@ -261,17 +261,3 @@ fn result_log_path() -> PathBuf {
 fn temp_script_path() -> PathBuf {
     std::env::temp_dir().join("nkriz-dns-connector-action.sh")
 }
-
-pub fn is_ip_address(text: &str) -> bool {
-    let parts: Vec<&str> = text.trim().split('.').collect();
-    if parts.len() != 4 {
-        return false;
-    }
-
-    parts.iter().all(|part| {
-        !part.is_empty()
-            && part.len() <= 3
-            && part.chars().all(|ch| ch.is_ascii_digit())
-            && part.parse::<u16>().is_ok_and(|value| value <= 255)
-    })
-}

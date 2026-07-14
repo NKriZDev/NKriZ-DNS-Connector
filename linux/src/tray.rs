@@ -214,9 +214,10 @@ fn event_loop(
 }
 
 fn init_gtk() {
-    if std::env::var_os("DISPLAY").is_none() {
+    if std::env::var_os("DISPLAY").is_none() && std::env::var_os("WAYLAND_DISPLAY").is_none() {
         eprintln!(
-            "Error: DISPLAY is not set. Launch from the desktop session or run with DISPLAY=:0."
+            "Error: no graphical session (DISPLAY/WAYLAND_DISPLAY not set).\n\
+             Run: ./native run   (from the linux folder on this machine)"
         );
         std::process::exit(1);
     }

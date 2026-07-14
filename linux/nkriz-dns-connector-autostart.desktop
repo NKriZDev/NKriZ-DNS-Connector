@@ -2,7 +2,7 @@
 Type=Application
 Name=NKriZ DNS Connector
 Comment=Start NKriZ DNS Connector in the system tray
-Exec=nkriz-dns-connector
+Exec=nkriz-dns-connector-launch
 Icon=network-workgroup
 Terminal=false
 Categories=Network;Utility;

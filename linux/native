@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+# Native Linux Mint workflow — run everything on mint-dev, no Mac sync needed.
+#
+#   ./native setup     Install Rust + system packages (first time)
+#   ./native build     Compile release binary
+#   ./native install   Install to /usr/local/bin + desktop entries
+#   ./native run       Start the tray app (sets DISPLAY/DBUS for you)
+#   ./native stop      Kill running tray app
+#   ./native debug     Print diagnostics (paste output if something breaks)
+#   ./native all       setup + build + install + run
+
+set -euo pipefail
+
+LINUX_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/common.sh
+source "$LINUX_ROOT/scripts/common.sh"
+
+usage() {
+  cat <<EOF
+NKriZ DNS Connector — native Linux Mint commands
+
+  ./native setup     First-time setup (Rust + apt packages)
+  ./native build     Build release binary
+  ./native install   Install system-wide
+  ./native run       Launch tray app (auto-fixes DISPLAY/DBUS)
+  ./native stop      Stop running instance
+  ./native debug     Show diagnostics
+  ./native all       setup → build → install → run
+
+Quick start (on mint-dev only):
+  cd ~/Dev/NKriZ-DNS-Connector/linux
+  chmod +x native
+  ./native all
+
+EOF
+}
+
+cmd_setup() {
+  require_linux_x64
+  ensure_native_cargo_config
+  ensure_rust
+  ensure_apt_packages "build" "${APT_BUILD_PACKAGES[@]}"
+  ensure_apt_packages "runtime" "${APT_RUNTIME_PACKAGES[@]}"
+  log "Setup complete."
+}
+
+cmd_build() {
+  require_linux_x64
+  load_rust_env
+  ensure_native_cargo_config
+  cargo_ready || die "Rust not found. Run: ./native setup"
+
+  missing=()
+  for cmd in pkg-config nmcli; do
+    command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
+  done
+  if ((${#missing[@]} > 0)); then
+    die "Missing tools: ${missing[*]}. Run: ./native setup"
+  fi
+
+  log "Building release binary..."
+  cd "$LINUX_ROOT"
+  cargo build --release
+
+  [[ -f "$BIN_PATH" ]] || die "Build failed: $BIN_PATH not found"
+  log "Built: $BIN_PATH"
+  file "$BIN_PATH"
+
+  mkdir -p "$DIST_DIR"
+  cp "$BIN_PATH" "$DIST_DIR/$APP_NAME"
+  cp "$LINUX_ROOT/nkriz-dns-connector.desktop" "$DIST_DIR/nkriz-dns-connector.desktop"
+  cp "$LINUX_ROOT/nkriz-dns-connector-autostart.desktop" "$DIST_DIR/nkriz-dns-connector-autostart.desktop"
+  cp "$LINUX_ROOT/scripts/install-linux-mint.sh" "$DIST_DIR/install-linux-mint.sh"
+  cp "$LINUX_ROOT/scripts/launch.sh" "$DIST_DIR/launch.sh"
+  chmod +x "$DIST_DIR/install-linux-mint.sh" "$DIST_DIR/launch.sh"
+
+  tarball="$DIST_DIR/NKriZ-DNS-Connector-linux-x64-${VERSION}.tar.gz"
+  rm -f "$tarball"
+  tar -czf "$tarball" -C "$DIST_DIR" \
+    "$APP_NAME" launch.sh \
+    nkriz-dns-connector.desktop \
+    nkriz-dns-connector-autostart.desktop \
+    install-linux-mint.sh
+
+  log "Package: $tarball"
+}
+
+cmd_install() {
+  require_linux_x64
+  [[ -f "$BIN_PATH" ]] || die "Binary missing. Run: ./native build"
+
+  ensure_apt_packages "runtime" "${APT_RUNTIME_PACKAGES[@]}"
+
+  log "Installing system-wide..."
+  run_root install -m 755 "$BIN_PATH" "/usr/local/bin/$APP_NAME"
+  run_root install -m 755 "$LINUX_ROOT/scripts/launch.sh" "/usr/local/bin/$LAUNCH_NAME"
+  run_root install -m 644 "$LINUX_ROOT/nkriz-dns-connector.desktop" "/usr/share/applications/nkriz-dns-connector.desktop"
+  run_root install -m 644 "$LINUX_ROOT/nkriz-dns-connector-autostart.desktop" "/etc/xdg/autostart/nkriz-dns-connector-autostart.desktop"
+
+  log "Installed:"
+  echo "  /usr/local/bin/$APP_NAME"
+  echo "  /usr/local/bin/$LAUNCH_NAME"
+  echo "  /usr/share/applications/nkriz-dns-connector.desktop"
+  echo ""
+  echo "Launch: ./native run   or from the app menu"
+}
+
+cmd_run() {
+  require_linux_x64
+  detect_graphical_env
+
+  bin="$(resolve_binary)"
+  log "Starting tray app..."
+  echo "  binary:  $bin"
+  echo "  DISPLAY: ${DISPLAY:-unset}"
+  echo "  DBUS:    ${DBUS_SESSION_BUS_ADDRESS:-unset}"
+
+  if pgrep -x "$APP_NAME" >/dev/null 2>&1; then
+    warn "$APP_NAME is already running (pid $(pgrep -x "$APP_NAME"))."
+    warn "Run ./native stop first if you want a fresh start."
+    exit 0
+  fi
+
+  "$bin" &
+  sleep 1
+
+  if pgrep -x "$APP_NAME" >/dev/null 2>&1; then
+    log "Running (pid $(pgrep -x "$APP_NAME")). Check the panel notification area."
+  else
+    die "App exited immediately. Run: ./native debug"
+  fi
+}
+
+cmd_stop() {
+  if pgrep -x "$APP_NAME" >/dev/null 2>&1; then
+    pkill -x "$APP_NAME"
+    log "Stopped $APP_NAME."
+  else
+    log "$APP_NAME is not running."
+  fi
+}
+
+cmd_debug() {
+  require_linux_x64
+  load_rust_env
+  detect_graphical_env
+
+  echo "========== NKriZ DNS Connector debug =========="
+  echo
+  echo "[system]"
+  uname -a
+  echo
+  echo "[session]"
+  echo "DISPLAY=${DISPLAY:-unset}"
+  echo "WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-unset}"
+  echo "XAUTHORITY=${XAUTHORITY:-unset}"
+  echo "DBUS_SESSION_BUS_ADDRESS=${DBUS_SESSION_BUS_ADDRESS:-unset}"
+  echo "XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-unset}"
+  command -v loginctl >/dev/null && loginctl list-sessions --no-legend || true
+  echo
+  echo "[tools]"
+  for cmd in cargo rustc pkg-config nmcli pkexec gtk3-demo; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+      echo "OK  $cmd -> $(command -v "$cmd")"
+    else
+      echo "MISS $cmd"
+    fi
+  done
+  cargo --version 2>/dev/null || echo "cargo: not available"
+  echo
+  echo "[packages]"
+  for pkg in "${APT_BUILD_PACKAGES[@]}" "${APT_RUNTIME_PACKAGES[@]}"; do
+    if pkg_installed "$pkg"; then
+      echo "OK  $pkg"
+    else
+      echo "MISS $pkg"
+    fi
+  done
+  echo
+  echo "[binary]"
+  if [[ -f "$BIN_PATH" ]]; then
+    ls -lh "$BIN_PATH"
+    file "$BIN_PATH"
+    echo "--- ldd (missing libs) ---"
+    ldd "$BIN_PATH" | grep 'not found' || echo "(none missing)"
+    echo "--- tray-related libs ---"
+    ldd "$BIN_PATH" | grep -E 'gtk|ayatana|appindicator|X11|wayland' || true
+  else
+    echo "MISS $BIN_PATH  (run ./native build)"
+  fi
+  echo
+  echo "[process]"
+  if pgrep -a "$APP_NAME"; then
+    echo "running"
+  else
+    echo "not running"
+  fi
+  echo
+  echo "[network / dns]"
+  nmcli -t -f NAME connection show --active 2>/dev/null || echo "nmcli failed"
+  active="$(nmcli -t -f NAME connection show --active 2>/dev/null | head -1 || true)"
+  if [[ -n "$active" ]]; then
+    nmcli -f ipv4.dns,ipv4.ignore-auto-dns connection show "$active" 2>/dev/null || true
+  fi
+  echo
+  echo "[cargo config]"
+  if [[ -f "$LINUX_ROOT/.cargo/config.toml" ]]; then
+    if grep -q '/Users/' "$LINUX_ROOT/.cargo/config.toml" 2>/dev/null; then
+      echo "BAD  .cargo/config.toml still has Mac paths — run ./native setup"
+    else
+      echo "OK   .cargo/config.toml looks native"
+    fi
+  else
+    echo "MISS .cargo/config.toml — run ./native setup"
+  fi
+  echo
+  echo "==============================================="
+  echo "If tray icon is missing: Cinnamon panel → right-click → Applets → enable Notification Area."
+}
+
+main() {
+  case "${1:-help}" in
+    setup) cmd_setup ;;
+    build) cmd_build ;;
+    install) cmd_install ;;
+    run) cmd_run ;;
+    stop) cmd_stop ;;
+    debug) cmd_debug ;;
+    all)
+      cmd_setup
+      cmd_build
+      cmd_install
+      cmd_run
+      ;;
+    help|-h|--help) usage ;;
+    *) usage; die "Unknown command: $1" ;;
+  esac
+}
+
+main "$@"
