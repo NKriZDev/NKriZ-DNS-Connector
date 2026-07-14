@@ -5,6 +5,7 @@
 #   ./native build     Compile release binary
 #   ./native install   Install to /usr/local/bin + desktop entries
 #   ./native run       Start the tray app (sets DISPLAY/DBUS for you)
+#   ./native run-fg    Start in foreground (shows errors in terminal)
 #   ./native stop      Kill running tray app
 #   ./native debug     Print diagnostics (paste output if something breaks)
 #   ./native all       setup + build + install + run
@@ -23,6 +24,7 @@ NKriZ DNS Connector — native Linux Mint commands
   ./native build     Build release binary
   ./native install   Install system-wide
   ./native run       Launch tray app (auto-fixes DISPLAY/DBUS)
+  ./native run-fg    Launch in foreground (shows crash output)
   ./native stop      Stop running instance
   ./native debug     Show diagnostics
   ./native all       setup → build → install → run
@@ -106,8 +108,10 @@ cmd_install() {
 }
 
 cmd_run() {
+  local foreground="${1:-}"
   require_linux_x64
   detect_graphical_env
+  export XDG_CURRENT_DESKTOP="${XDG_CURRENT_DESKTOP:-Cinnamon}"
 
   bin="$(resolve_binary)"
   log "Starting tray app..."
@@ -115,25 +119,35 @@ cmd_run() {
   echo "  DISPLAY: ${DISPLAY:-unset}"
   echo "  DBUS:    ${DBUS_SESSION_BUS_ADDRESS:-unset}"
 
-  if pgrep -x "$APP_NAME" >/dev/null 2>&1; then
-    warn "$APP_NAME is already running (pid $(pgrep -x "$APP_NAME"))."
+  if app_is_running; then
+    warn "$APP_NAME is already running (pid $(app_pids | tr '\n' ' '))."
     warn "Run ./native stop first if you want a fresh start."
     exit 0
   fi
 
-  "$bin" &
-  sleep 1
+  if [[ "$foreground" == "--fg" ]]; then
+    log "Running in foreground — Ctrl+C to quit."
+    exec "$bin"
+  fi
 
-  if pgrep -x "$APP_NAME" >/dev/null 2>&1; then
-    log "Running (pid $(pgrep -x "$APP_NAME")). Check the panel notification area."
+  : >"$RUN_LOG"
+  "$bin" >>"$RUN_LOG" 2>&1 &
+  sleep 2
+
+  if app_is_running; then
+    log "Running (pid $(app_pids | tr '\n' ' ')). Check the panel notification area."
+    echo "  log: $RUN_LOG"
   else
-    die "App exited immediately. Run: ./native debug"
+    echo "--- last log lines ---" >&2
+    tail -30 "$RUN_LOG" >&2 || true
+    die "App exited immediately. Try: ./native run-fg"
   fi
 }
 
 cmd_stop() {
-  if pgrep -x "$APP_NAME" >/dev/null 2>&1; then
-    pkill -x "$APP_NAME"
+  if app_is_running; then
+    app_stop
+    sleep 1
     log "Stopped $APP_NAME."
   else
     log "$APP_NAME is not running."
@@ -190,11 +204,19 @@ cmd_debug() {
   fi
   echo
   echo "[process]"
-  if pgrep -a "$APP_NAME"; then
+  if app_is_running; then
+    pgrep -af '[n]kriz-dns-connector' || true
     echo "running"
   else
     echo "not running"
   fi
+  if [[ -f "$RUN_LOG" ]]; then
+    echo "--- last run log ($RUN_LOG) ---"
+    tail -20 "$RUN_LOG" 2>/dev/null || true
+  fi
+  echo
+  echo "[appindicator lib]"
+  ldconfig -p 2>/dev/null | grep -i appindicator || echo "libappindicator not in ldconfig cache"
   echo
   echo "[network / dns]"
   nmcli -t -f NAME connection show --active 2>/dev/null || echo "nmcli failed"
@@ -224,6 +246,7 @@ main() {
     build) cmd_build ;;
     install) cmd_install ;;
     run) cmd_run ;;
+    run-fg) cmd_run --fg ;;
     stop) cmd_stop ;;
     debug) cmd_debug ;;
     all)

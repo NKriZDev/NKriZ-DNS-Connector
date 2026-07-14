@@ -198,3 +198,20 @@ resolve_binary() {
   fi
   die "Binary not found. Run: ./native build"
 }
+
+# Linux truncates /proc/comm to 15 chars, so pgrep -x on the full binary name fails.
+app_is_running() {
+  pgrep -f '[n]kriz-dns-connector' >/dev/null 2>&1
+}
+
+app_pids() {
+  pgrep -f '[n]kriz-dns-connector' 2>/dev/null || true
+}
+
+app_stop() {
+  if app_is_running; then
+    pkill -f '[n]kriz-dns-connector' || true
+  fi
+}
+
+RUN_LOG="/tmp/nkriz-dns-connector.log"
