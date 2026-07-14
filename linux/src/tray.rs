@@ -206,7 +206,7 @@ fn event_loop(
         }
 
         let _ = TrayIconEvent::receiver().try_recv();
-        while gtk::events_pending() != 0 {
+        while gtk::events_pending() {
             gtk::main_iteration_do(false);
         }
         gtk::main_iteration_do(false);
